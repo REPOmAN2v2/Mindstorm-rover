@@ -10,9 +10,6 @@ _OBJECTS := $(_HEADERS:.hpp=.o)
 OBJECTS = $(patsubst %,$(ODIR)/%,$(_OBJECTS))
 HEADERS = $(patsubst %,$(SRC)/%,$(_HEADERS))
 
-#NODEBUG = -O2 -std=c11 -mwindows
-
-
 default: rover
 
 build:
