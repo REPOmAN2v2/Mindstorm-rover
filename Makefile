@@ -18,7 +18,7 @@ ifeq ($(SDL), 1)
 	_HEADERS += sdl.hpp
 	CXXFLAGS += -DSDL_SUPPORT
 	ifdef COMSPEC
-		LIBS = -lmingw32 -lSDL2main -lSDL2 -luser32 -lgdi32 -lwinmm -ldxguid
+		LIBS = -lmingw32 -lSDL2main -lSDL2 -luser32 -lgdi32 -ldxguid
 	else
 		LIBS = `sdl2-config --cflags --libs`
 	endif

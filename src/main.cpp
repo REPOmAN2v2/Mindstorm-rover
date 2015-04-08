@@ -15,11 +15,13 @@ int main (int argc, char *argv[])
 	try {
 		SDL::init();
 		SDL::Window window(250,100,"Rover");
-		SDL_Event event;
-		while (SDL_PollEvent(&event)) {
-			if (event.key.keysym.sym == SDLK_ESCAPE) {
-				std::cout << "Escape event received" << std::endl;
-				break;
+		while (1) {
+			SDL_Event event;
+			while (SDL_PollEvent(&event)) {
+				if (event.type == SDL_QUIT) {
+					std::cout << "Quit event received" << std::endl;
+					return 0;
+				}
 			}
 		}
 	} catch (...) {
