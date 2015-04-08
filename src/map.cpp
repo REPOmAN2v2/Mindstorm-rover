@@ -10,12 +10,22 @@ using namespace std;
  * Map constructor
  *
  * Initialises two public member variables, the number of horizontal (hCells)
- * and vertical (vCells) cells on the map.
+ * and vertical (vCells) cells on the map with default values or values entered
+ * by the user.
+ */
+
+Map::Map() : hCells(20), vCells(20) {generateMaze();}
+Map::Map(int h) : hCells(h), vCells(20) {generateMaze();}
+Map::Map(int h, int v) : hCells(h), vCells(v) {generateMaze();}
+
+/**
+ * Maze generator
  *
  * It generates a random simple maze. Good enough for quick testing with
  * unique maps every time.
  */
-Map::Map() : hCells(20), vCells(20)
+
+void Map::generateMaze()
 {
 	srand(time(NULL));
 	list < pair < int, int> > drillers;

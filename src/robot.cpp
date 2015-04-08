@@ -15,16 +15,14 @@
  * obstacles) cell.
  */
 
-Robot::Robot(int h, int w, std::vector <std::vector <Cell> > &cells)
+Robot::Robot(Map &map)
 {
-	srand(time(NULL));
-
 	do {
-		y = rand()%h;
-		x = rand()%w;
-	} while (cells[y][x].obstacle == true);
+		y = rand()%map.height();
+		x = rand()%map.width();
+	} while (map.cells[y][x].obstacle == true);
 
-	cells[y][x].robot = true;
+	map.cells[y][x].robot = true;
 }
 
 /**

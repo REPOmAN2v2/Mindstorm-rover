@@ -8,7 +8,7 @@ enum Directions {WEST, NORTH, EAST, SOUTH};
 
 class Robot  {
 public:
-	explicit Robot(int h, int w, std::vector <std::vector <Cell> > &cells);
+	explicit Robot(Map &map);
 	void explore(Map &map);
 private:
 	int x, y;

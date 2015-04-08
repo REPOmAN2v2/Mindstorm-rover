@@ -4,8 +4,8 @@
 
 int main ()
 {
-	Map map;
-	Robot robot(map.vCells, map.hCells, map.cells);
+	Map map(25,10);
+	Robot robot(map);
 
 	map.displayDebug();
 	robot.explore(map);
