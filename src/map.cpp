@@ -20,12 +20,12 @@ Map::Map() : hCells(20), vCells(20)
 	srand(time(NULL));
 	list < pair < int, int> > drillers;
 
-	this->cells.resize(this->vCells);
-	for (size_t y=0; y < this->vCells; ++y) {
-		this->cells[y].resize(this->hCells);
+	cells.resize(vCells);
+	for (size_t y=0; y < vCells; ++y) {
+		cells[y].resize(hCells);
 	}
 
-	drillers.push_back(make_pair(this->hCells/2, this->vCells/2));
+	drillers.push_back(make_pair(hCells/2, vCells/2));
 
 	while (drillers.size() > 0) {
 		list < pair < int, int> >::iterator m,_m,temp;
@@ -37,37 +37,37 @@ Map::Map() : hCells(20), vCells(20)
 			switch(rand()%4) {
 				case 0:
 					(*m).second-=2;
-					if ((*m).second < 0 || !this->cells[(*m).second][(*m).first].obstacle) {
+					if ((*m).second < 0 || !cells[(*m).second][(*m).first].obstacle) {
 						remove_driller = true;
 						break;
 					}
-					this->cells[(*m).second+1][(*m).first].obstacle = false;
+					cells[(*m).second+1][(*m).first].obstacle = false;
 				break;
 
 				case 1:
 					(*m).second+=2;
-					if ((*m).second >= this->vCells || !this->cells[(*m).second][(*m).first].obstacle) {
+					if ((*m).second >= vCells || !cells[(*m).second][(*m).first].obstacle) {
 						remove_driller=true;
 						break;
 					}
-					this->cells[(*m).second-1][(*m).first].obstacle=false;
+					cells[(*m).second-1][(*m).first].obstacle=false;
 				break;
 
 				case 2:
 					(*m).first-=2;
-					if ((*m).first < 0 || !this->cells[(*m).second][(*m).first].obstacle) {
+					if ((*m).first < 0 || !cells[(*m).second][(*m).first].obstacle) {
 						remove_driller=true;
 						break;
 					}
-					this->cells[(*m).second][(*m).first+1].obstacle=false;
+					cells[(*m).second][(*m).first+1].obstacle=false;
 				break;
 				case 3:
 					(*m).first+=2;
-					if ((*m).first >= this->hCells || !this->cells[(*m).second][(*m).first].obstacle) {
+					if ((*m).first >= hCells || !cells[(*m).second][(*m).first].obstacle) {
 						remove_driller=true;
 						break;
 					}
-					this->cells[(*m).second][(*m).first-1].obstacle=false;
+					cells[(*m).second][(*m).first-1].obstacle=false;
 				break;
 			}
 
@@ -80,7 +80,7 @@ Map::Map() : hCells(20), vCells(20)
 					drillers.push_back(make_pair((*m).first,(*m).second));
 				}
 
-				this->cells[(*m).second][(*m).first].obstacle =false;
+				cells[(*m).second][(*m).first].obstacle =false;
 				++m;
 			}
 		}
@@ -94,16 +94,16 @@ Map::Map() : hCells(20), vCells(20)
  * and empty cells with a '.' and explored cells with an obstacle with a '#'.
  */
 
-void Map::display()
+void Map::display() const
 {
-	for (size_t y = 0; y < this->vCells; ++y) {
-		for (size_t x = 0; x < this->hCells; ++x) {
-			if (this->cells[y][x].robot == true) {
+	for (size_t y = 0; y < vCells; ++y) {
+		for (size_t x = 0; x < hCells; ++x) {
+			if (cells[y][x].robot == true) {
 				cout << 'O';
-			} else if (this->cells[y][x].visible == false) {
+			} else if (cells[y][x].visible == false) {
 				cout << '?';
 			} else {
-				if (this->cells[y][x].obstacle == false) {
+				if (cells[y][x].obstacle == false) {
 					cout << '.';
 				} else {
 					cout << '#';
@@ -121,11 +121,11 @@ void Map::display()
  * Displays the map without fog of war
  */
 
-void Map::displayDebug()
+void Map::displayDebug() const
 {
-	for (size_t y = 0; y < this->vCells; ++y) {
-		for (size_t x = 0; x < this->hCells; ++x) {
-			if (this->cells[y][x].obstacle == false) {
+	for (size_t y = 0; y < vCells; ++y) {
+		for (size_t x = 0; x < hCells; ++x) {
+			if (cells[y][x].obstacle == false) {
 				cout << '.';
 			} else {
 				cout << '#';
@@ -147,6 +147,6 @@ void Map::displayDebug()
 
 void Map::updateRobotPos(std::pair<int,int> oldPos, std::pair<int,int> newPos)
 {
-	this->cells[oldPos.first][oldPos.second].robot = false;
-	this->cells[newPos.first][newPos.second].robot = true;
+	cells[oldPos.first][oldPos.second].robot = false;
+	cells[newPos.first][newPos.second].robot = true;
 }

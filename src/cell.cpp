@@ -7,7 +7,7 @@
  * as the cell height and width private member variables.
  */
 
-Cell::Cell() : visible(false), obstacle(true), robot(false), h(5), w(5)
+Cell::Cell() : visible(false), obstacle(true), robot(false)
 {
 
 }

@@ -11,7 +11,7 @@ public:
 	Cell();
 private:
 	int x, y;
-	size_t h, w;
+	static size_t const h = 5, w = 5;
 };
 
 #endif

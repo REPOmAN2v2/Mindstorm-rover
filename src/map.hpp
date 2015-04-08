@@ -10,8 +10,8 @@ public:
 	const size_t hCells, vCells;
 	std::vector< std::vector< Cell > > cells;
 	Map();
-	void display();
-	void displayDebug();
+	void display() const;
+	void displayDebug() const;
 	void updateRobotPos(std::pair<int,int> oldPos, std::pair<int,int> newPos);
 private:
 };

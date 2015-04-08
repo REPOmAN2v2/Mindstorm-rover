@@ -20,8 +20,8 @@ Robot::Robot(int h, int w, std::vector <std::vector <Cell> > &cells)
 	srand(time(NULL));
 
 	do {
-		this->y = rand()%h;
-		this->x = rand()%w;
+		y = rand()%h;
+		x = rand()%w;
 	} while (cells[y][x].obstacle == true);
 
 	cells[y][x].robot = true;
@@ -32,39 +32,39 @@ Robot::Robot(int h, int w, std::vector <std::vector <Cell> > &cells)
  *
  * Takes a reference to the map. Returns void.
  *
- * This method creates the list of visited coordinates then calls the real
+ * This method creates the vector of visited coordinates then calls the real
  * exploration routine.
  */
 
 void Robot::explore(Map &map)
 {
-	std::list < std::pair < int, int> > visited;
-	this->exploreRoutine(map, visited);
+	std::vector < std::pair < int, int> > visited;
+	exploreRoutine(map, visited);
 }
 
 /**
  * Exploration routine.
  *
- * Takes a reference to the map as well as to the list of visited cells.
+ * Takes a reference to the map as well as to the vector of visited cells.
  * Returns void.
  *
  * This method uses a basic Depth-First Search. It adds the current position
- * to the visited list then finds the four immediate neighbours. It then looks
- * at each neighbour one after the other, marking them as visible as it goes.
- * If the neighbour is an obstacle, it is skipped, else we check if it has
- * already been visited. If it hasn't, we move on the neighbour and call this
- * routine recursively with this new position.
+ * to the visited vector then finds the four immediate neighbours. It then
+ * looks at each neighbour one after the other, marking them as visible as it
+ * goes. If the neighbour is an obstacle, it is skipped, else we check if it
+ * has already been visited. If it hasn't, we move on the neighbour and call
+ * this routine recursively with this new position.
  * When the routine returns, we move back to the original position and explore
  * the remaining (if any) neighbours, until every branch has been explored.
  */
 
-void Robot::exploreRoutine(Map &map, std::list < std::pair < int, int> > &visited)
+void Robot::exploreRoutine(Map &map, std::vector < std::pair < int, int> > &visited)
 {
 	std::vector < std::pair <int, int> > neighbours;
-	std::pair <int,int> orig(this->y, this->x);
+	std::pair <int,int> orig(y, x);
 
-	visited.push_back(std::make_pair(this->y, this->x));
-	this->findNeighbours(neighbours);
+	visited.push_back(std::make_pair(y, x));
+	findNeighbours(neighbours);
 
 	for (size_t i = 0; i < 4; ++i) {
 		try {
@@ -77,13 +77,13 @@ void Robot::exploreRoutine(Map &map, std::list < std::pair < int, int> > &visite
 			continue;
 		}
 
-		std::list<std::pair<int, int> >::iterator iter = std::find(visited.begin(), visited.end(), neighbours[i]);
+		std::vector<std::pair<int, int> >::iterator iter = std::find(visited.begin(), visited.end(), neighbours[i]);
 
 		if (iter == visited.end()) { // i.e. neighbour not yet visited
 			map.display();
-			this->move(neighbours[i], map);
-			this->exploreRoutine(map, visited);
-			this->move(orig, map);
+			move(neighbours[i], map);
+			exploreRoutine(map, visited);
+			move(orig, map);
 		}
 	}
 }
@@ -94,12 +94,12 @@ void Robot::exploreRoutine(Map &map, std::list < std::pair < int, int> > &visite
  * Returns void.
  */
 
-void Robot::findNeighbours(std::vector < std::pair <int, int> > &neighbours)
+void Robot::findNeighbours(std::vector < std::pair <int, int> > &neighbours) const
 {
-	neighbours.push_back(std::make_pair(this->y, this->x - 1));
-	neighbours.push_back(std::make_pair(this->y + 1, this->x));
-	neighbours.push_back(std::make_pair(this->y, this->x + 1));
-	neighbours.push_back(std::make_pair(this->y - 1, this->x));
+	neighbours.push_back(std::make_pair(y, x - 1));
+	neighbours.push_back(std::make_pair(y + 1, x));
+	neighbours.push_back(std::make_pair(y, x + 1));
+	neighbours.push_back(std::make_pair(y - 1, x));
 }
 
 /** Moves the robot
@@ -114,6 +114,6 @@ void Robot::findNeighbours(std::vector < std::pair <int, int> > &neighbours)
 void Robot::move(std::pair <int, int> coord, Map &map)
 {
 	map.updateRobotPos(std::make_pair(y,x), coord);
-	this->y = coord.first;
-	this->x = coord.second;
+	y = coord.first;
+	x = coord.second;
 }
