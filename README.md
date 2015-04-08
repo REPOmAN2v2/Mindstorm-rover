@@ -20,9 +20,9 @@ Version
 Compilation
 -----------
 
-`make`
+`make DEBUG={0,1} SDL={0,1}`
 
-The default makefile will generate a debug version with gprof profiling enabled. 
+DEBUG=1 will generate a debug version with gprof profiling enabled. SDL=1 enables SDL support.
 
 License
 -------

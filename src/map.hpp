@@ -9,8 +9,8 @@ class Map {
 public:
 	std::vector< std::vector< Cell > > cells;
 	Map();
-	Map(int);
-	Map(int, int);
+	explicit Map(int);
+	explicit Map(int, int);
 	void display() const;
 	void displayDebug() const;
 	void updateRobotPos(std::pair<int,int> oldPos, std::pair<int,int> newPos);
