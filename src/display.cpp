@@ -39,6 +39,7 @@ void draw(Map map, Window &window)
 
 void drawDebug(Map map, Window &window)
 {
+	Color red(255,0,0);
 	Color white(255,255,255);
 	Color grey(130,130,130);
 
@@ -50,7 +51,9 @@ void drawDebug(Map map, Window &window)
 			SDL_Rect rect = {.x=Cell::w*x, .y=Cell::h*y,
 						.w=Cell::w, .h=Cell::h};
 
-			if (!cell.obstacle) {
+			if (cell.robot) {
+				window.drawRect(rect, red);
+			} else if (!cell.obstacle) {
 				window.drawRect(rect, white);
 			} else {
 				window.drawRect(rect, grey);

@@ -26,21 +26,6 @@ Robot::Robot(Map &map)
 }
 
 /**
- * Call for the exploration routine of the robot.
- *
- * Takes a reference to the map. Returns void.
- *
- * This method creates the vector of visited coordinates then calls the real
- * exploration routine.
- */
-
-void Robot::explore(Map &map)
-{
-	std::vector < std::pair < int, int> > visited;
-	exploreRoutine(map, visited);
-}
-
-/**
  * Exploration routine.
  *
  * Takes a reference to the map as well as to the vector of visited cells.
@@ -56,7 +41,7 @@ void Robot::explore(Map &map)
  * the remaining (if any) neighbours, until every branch has been explored.
  */
 
-void Robot::exploreRoutine(Map &map, std::vector < std::pair < int, int> > &visited)
+void Robot::explore(Map &map)
 {
 	std::vector < std::pair <int, int> > neighbours;
 	std::pair <int,int> orig(y, x);
@@ -79,7 +64,7 @@ void Robot::exploreRoutine(Map &map, std::vector < std::pair < int, int> > &visi
 
 		if (iter == visited.end()) { // i.e. neighbour not yet visited
 			move(neighbours[i], map);
-			exploreRoutine(map, visited);
+			explore(map);
 			move(orig, map);
 		}
 	}

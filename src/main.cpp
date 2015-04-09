@@ -21,17 +21,20 @@ int main(int, char **)
 	try {
 		SDL::init();
 		SDL::Window window(25*Cell::h, 10*Cell::w, "Rover");
-		drawDebug(map, window);
+		SDL::Keyboard keyboard;
 
-		while (1) {
-			SDL_Event event;
-			while (SDL_PollEvent(&event)) {
-				if (event.type == SDL_QUIT) {
-					std::cout << "Quit event received" << std::endl;
-					return 0;
-				}
-			}
-		}
+		// show the full map once
+		drawDebug(map, window);
+		keyboard.waitFor(SDL_KEYDOWN);
+
+		// show the unexplored map
+		draw(map, window);
+		keyboard.waitFor(SDL_KEYDOWN);
+
+		// explore and show the explored map
+		robot.explore(map);
+		draw(map, window);
+		keyboard.waitFor(SDL_QUIT);
 	} catch (...) {
 		SDL::exit();
 		return -1;
@@ -41,6 +44,7 @@ int main(int, char **)
 
 	drawDebug(map);
 	robot.explore(map);
+	draw(map);
 
 	std::cin.get();
 

@@ -97,3 +97,18 @@ void SDL::Window::drawRect(SDL_Rect rect, Color color)
 SDL::Color::Color() : red(0), green(0), blue(0), alpha(255) {}
 
 SDL::Color::Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) : red(r), green(g), blue(b), alpha(a) {}
+
+SDL::Keyboard::Keyboard() : kb(NULL) {}
+
+void SDL::Keyboard::waitFor(SDL_EventType type)
+{
+	SDL_Event event;
+
+	while (1) {
+		while (SDL_PollEvent(&event)) {
+			if (event.type == type) {
+				return;
+			}
+		}
+	}
+}

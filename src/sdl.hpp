@@ -27,7 +27,7 @@ namespace SDL
 
 	class Window {
 	public:
-		explicit Window(unsigned int width, unsigned int height, std::string title);
+		explicit Window(unsigned int width, unsigned int height, std::string title = "");
 		void destroy();
 		void refresh();
 		void fill(Color color);
@@ -40,6 +40,14 @@ namespace SDL
 		unsigned int width, height;
 		std::string title;
 		Color background;
+	};
+
+	class Keyboard {
+	public:
+		Keyboard();
+		void waitFor(SDL_EventType type);
+	private:
+		const uint8_t *kb;
 	};
 }
 

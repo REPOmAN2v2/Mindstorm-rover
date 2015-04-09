@@ -13,8 +13,8 @@ public:
 private:
 	int x, y;
 	Directions direction;
+	std::vector < std::pair < int, int> > visited;
 	void findNeighbours(std::vector < std::pair <int, int> > &neighbours) const;
-	void exploreRoutine(Map &map, std::vector < std::pair < int, int> > &visited);
 	void move(std::pair <int, int> coord, Map &map);
 };
 
