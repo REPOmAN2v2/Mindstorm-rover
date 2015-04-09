@@ -8,7 +8,7 @@ public:
 	bool visible;
 	bool obstacle;
 	bool robot;
-	static size_t const h = 10, w = 10;
+	static unsigned int const h = 10, w = 10;
 	Cell();
 private:
 	int x, y;

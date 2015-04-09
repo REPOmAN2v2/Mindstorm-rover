@@ -6,7 +6,12 @@
 #endif
 #include <iostream>
 
-int main (int argc, char *argv[])
+/**
+ * Note: argc and argv seemed to be needed for proper compilation with SDL
+ * We don't use them, so simply removing the variable names eliminates
+ * -Wunused-parameter warnings during compilation.
+ */
+int main(int, char **)
 {
 	Map map(25,10);
 	Robot robot(map);

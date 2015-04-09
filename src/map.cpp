@@ -56,7 +56,10 @@ void Map::generateMaze()
 
 				case 1:
 					(*m).second+=2;
-					if ((*m).second >= vCells || !cells[(*m).second][(*m).first].obstacle) {
+					/* Risk of overflow with cast from size_t to int
+					   Won't happen unless the user creates a stupidly large
+					   map, which would break the code anyway */
+					if ((*m).second >= static_cast<int>(vCells) || !cells[(*m).second][(*m).first].obstacle) {
 						remove_driller=true;
 						break;
 					}
@@ -73,7 +76,7 @@ void Map::generateMaze()
 				break;
 				case 3:
 					(*m).first+=2;
-					if ((*m).first >= hCells || !cells[(*m).second][(*m).first].obstacle) {
+					if ((*m).first >= static_cast<int>(hCells) || !cells[(*m).second][(*m).first].obstacle) {
 						remove_driller=true;
 						break;
 					}
@@ -98,53 +101,6 @@ void Map::generateMaze()
 }
 
 /**
- * Displays the map.
- *
- * The robot is displayed using a 'O', unexplored cells with a '?', explored
- * and empty cells with a '.' and explored cells with an obstacle with a '#'.
-
-
-void Map::display() const
-{
-	for (size_t y = 0; y < vCells; ++y) {
-		for (size_t x = 0; x < hCells; ++x) {
-			if (cells[y][x].robot == true) {
-				draw(ROBOT, make_pair(y,x), make_pair(vCells, hCells));
-			} else if (cells[y][x].visible == false) {
-				draw(UNKNOWN, make_pair(y,x), make_pair(vCells, hCells));
-			} else {
-				if (cells[y][x].obstacle == false) {
-					draw(OBSTACLE, make_pair(y,x), make_pair(vCells, hCells));
-				} else {
-					draw(EMPTY, make_pair(y,x), make_pair(vCells, hCells));
-				}
-			}
-		}
-	}
-}*/
-
-/**
- * Displays the map without fog of war
-
-
-void Map::displayDebug() const
-{
-	for (size_t y = 0; y < vCells; ++y) {
-		for (size_t x = 0; x < hCells; ++x) {
-			if (cells[y][x].obstacle == false) {
-				cout << '.';
-			} else {
-				cout << '#';
-			}
-		}
-
-		cout << endl;
-	}
-
-	cout << endl;
-}*/
-
-/**
  * Updates the robot's position on the map.
  *
  * Takes two pairs of coordinates, the first for the old ones and the second
@@ -156,6 +112,12 @@ void Map::updateRobotPos(std::pair<int,int> oldPos, std::pair<int,int> newPos)
 	cells[oldPos.first][oldPos.second].robot = false;
 	cells[newPos.first][newPos.second].robot = true;
 }
+
+/**
+ * Returns the cell at coordinates (y,x).
+ *
+ * Takes two coordinates of type size_t. Returns a Cell object.
+ */
 
 Cell Map::getCell(size_t y, size_t x)
 {
