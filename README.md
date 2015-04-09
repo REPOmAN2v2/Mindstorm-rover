@@ -24,7 +24,7 @@ Compilation
 
 `make DEBUG={0,1} SDL={0,1}`
 
-DEBUG=1 will generate a debug version with gprof profiling enabled. SDL=1 enables SDL support.
+DEBUG=1 will generate a debug version with gprof profiling enabled. SDL=1 enables SDL support (SDL2 required).
 
 License
 -------

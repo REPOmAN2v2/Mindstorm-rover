@@ -12,8 +12,8 @@ namespace SDL
 
 	class Color {
 	public:
-		Color();
-		Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
+		explicit Color();
+		explicit Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
 		uint8_t r() {return red;};
 		uint8_t g() {return green;};
 		uint8_t b() {return blue;};
@@ -25,19 +25,14 @@ namespace SDL
 		uint8_t alpha;
 	};
 
-	class Shape {
-	public:
-	private:
-	};
-
 	class Window {
 	public:
-		Window(unsigned int width, unsigned int height, std::string title);
+		explicit Window(unsigned int width, unsigned int height, std::string title);
 		void destroy();
 		void refresh();
 		void fill(Color color);
 		void clear();
-		void drawShape(Shape shape, Color color);
+		void drawRect(SDL_Rect rect, Color color);
 	private:
 		SDL_Window *window;
 		SDL_Surface *surface;

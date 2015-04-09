@@ -1,4 +1,4 @@
-_HEADERS = robot.hpp cell.hpp map.hpp
+_HEADERS = robot.hpp cell.hpp map.hpp display.hpp
 
 #------------------------------------#
 

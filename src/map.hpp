@@ -11,8 +11,9 @@ public:
 	Map();
 	explicit Map(int);
 	explicit Map(int, int);
-	void display() const;
-	void displayDebug() const;
+	/*void display() const;
+	void displayDebug() const;*/
+	Cell getCell(size_t y, size_t x);
 	void updateRobotPos(std::pair<int,int> oldPos, std::pair<int,int> newPos);
 	size_t height() {return vCells;};
 	size_t width() {return hCells;};

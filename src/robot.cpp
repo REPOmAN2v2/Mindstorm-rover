@@ -78,7 +78,6 @@ void Robot::exploreRoutine(Map &map, std::vector < std::pair < int, int> > &visi
 		std::vector<std::pair<int, int> >::iterator iter = std::find(visited.begin(), visited.end(), neighbours[i]);
 
 		if (iter == visited.end()) { // i.e. neighbour not yet visited
-			map.display();
 			move(neighbours[i], map);
 			exploreRoutine(map, visited);
 			move(orig, map);

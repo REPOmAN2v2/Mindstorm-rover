@@ -88,9 +88,10 @@ void SDL::Window::fill(Color color)
 	SDL_RenderClear(renderer);
 }
 
-void SDL::Window::drawShape(Shape shape, Color color)
+void SDL::Window::drawRect(SDL_Rect rect, Color color)
 {
-	//TODO
+	SDL_SetRenderDrawColor(renderer, color.r(), color.g(), color.b(), color.a());
+	SDL_RenderFillRect(renderer, &rect);
 }
 
 SDL::Color::Color() : red(0), green(0), blue(0), alpha(255) {}

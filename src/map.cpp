@@ -1,8 +1,8 @@
 #include "map.hpp"
-#include <iostream>
 #include <ctime>
 #include <cstdlib>
 #include <list>
+#include <stdexcept>
 
 using namespace std;
 
@@ -102,34 +102,30 @@ void Map::generateMaze()
  *
  * The robot is displayed using a 'O', unexplored cells with a '?', explored
  * and empty cells with a '.' and explored cells with an obstacle with a '#'.
- */
+
 
 void Map::display() const
 {
 	for (size_t y = 0; y < vCells; ++y) {
 		for (size_t x = 0; x < hCells; ++x) {
 			if (cells[y][x].robot == true) {
-				cout << 'O';
+				draw(ROBOT, make_pair(y,x), make_pair(vCells, hCells));
 			} else if (cells[y][x].visible == false) {
-				cout << '?';
+				draw(UNKNOWN, make_pair(y,x), make_pair(vCells, hCells));
 			} else {
 				if (cells[y][x].obstacle == false) {
-					cout << '.';
+					draw(OBSTACLE, make_pair(y,x), make_pair(vCells, hCells));
 				} else {
-					cout << '#';
+					draw(EMPTY, make_pair(y,x), make_pair(vCells, hCells));
 				}
 			}
 		}
-
-		cout << endl;
 	}
-
-	cout << endl;
-}
+}*/
 
 /**
  * Displays the map without fog of war
- */
+
 
 void Map::displayDebug() const
 {
@@ -146,7 +142,7 @@ void Map::displayDebug() const
 	}
 
 	cout << endl;
-}
+}*/
 
 /**
  * Updates the robot's position on the map.
@@ -159,4 +155,13 @@ void Map::updateRobotPos(std::pair<int,int> oldPos, std::pair<int,int> newPos)
 {
 	cells[oldPos.first][oldPos.second].robot = false;
 	cells[newPos.first][newPos.second].robot = true;
+}
+
+Cell Map::getCell(size_t y, size_t x)
+{
+	if (y >= cells.size() || x >= cells[0].size()) {
+		throw std::out_of_range("Invalid vector access");
+	}
+
+	return cells[y][x];
 }

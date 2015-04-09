@@ -1,5 +1,6 @@
 #include "map.hpp"
 #include "robot.hpp"
+#include "display.hpp"
 #ifdef SDL_SUPPORT
 	#include "sdl.hpp"
 #endif
@@ -14,7 +15,9 @@ int main (int argc, char *argv[])
 
 	try {
 		SDL::init();
-		SDL::Window window(250,100,"Rover");
+		SDL::Window window(25*Cell::h, 10*Cell::w, "Rover");
+		drawDebug(map, window);
+
 		while (1) {
 			SDL_Event event;
 			while (SDL_PollEvent(&event)) {
@@ -31,7 +34,7 @@ int main (int argc, char *argv[])
 
 	#else
 
-	map.displayDebug();
+	drawDebug(map);
 	robot.explore(map);
 
 	std::cin.get();
