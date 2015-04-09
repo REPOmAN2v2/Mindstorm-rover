@@ -5,7 +5,7 @@
 
 using namespace SDL;
 
-void draw(Map map, Window &window)
+void Display::draw(Map map)
 {
 	Color red(255,0,0);
 	Color black(0,0,0);
@@ -37,7 +37,7 @@ void draw(Map map, Window &window)
 	window.refresh();
 }
 
-void drawDebug(Map map, Window &window)
+void Display::drawDebug(Map map)
 {
 	Color red(255,0,0);
 	Color white(255,255,255);
@@ -66,7 +66,7 @@ void drawDebug(Map map, Window &window)
 
 #else
 
-void draw(Map map)
+void Display::draw(Map map)
 {
 	for (size_t y = 0; y < map.height(); ++y) {
 		for (size_t x = 0; x < map.width(); ++x) {
@@ -91,7 +91,7 @@ void draw(Map map)
 	std::cout << std::endl;
 }
 
-void drawDebug(Map map)
+void Display::drawDebug(Map map)
 {
 	for (size_t y = 0; y < map.height(); ++y) {
 		for (size_t x = 0; x < map.width(); ++x) {

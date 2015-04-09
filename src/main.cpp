@@ -3,8 +3,9 @@
 #include "display.hpp"
 #ifdef SDL_SUPPORT
 	#include "sdl.hpp"
+#else
+	#include <iostream>
 #endif
-#include <iostream>
 
 /**
  * Note: argc and argv seemed to be needed for proper compilation with SDL
@@ -22,18 +23,19 @@ int main(int, char **)
 		SDL::init();
 		SDL::Window window(25*Cell::h, 10*Cell::w, "Rover");
 		SDL::Keyboard keyboard;
+		Display display(window);
 
 		// show the full map once
-		drawDebug(map, window);
+		display.drawDebug(map);
 		keyboard.waitFor(SDL_KEYDOWN);
 
 		// show the unexplored map
-		draw(map, window);
+		display.draw(map);
 		keyboard.waitFor(SDL_KEYDOWN);
 
 		// explore and show the explored map
 		robot.explore(map);
-		draw(map, window);
+		display.draw(map);
 		keyboard.waitFor(SDL_QUIT);
 	} catch (...) {
 		SDL::exit();
@@ -42,9 +44,11 @@ int main(int, char **)
 
 	#else
 
-	drawDebug(map);
+	Display display;
+
+	display.drawDebug(map);
 	robot.explore(map);
-	draw(map);
+	display.draw(map);
 
 	std::cin.get();
 
