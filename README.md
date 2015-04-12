@@ -3,7 +3,7 @@ Mindstorm-Rover
 
 This project implements path finding and map exploration for the LEGO Mindstorms NXT robot. The goal is to enable the robot to navigate in a constrained, static but unexplored environment, drawing a map as it goes, and to find the fastest path between two points. 
 
-The first iterations of this project will remain computer simulations, avoiding many technical difficulties. Indeed, implementing the code on a real-life Mindstorms robot is much more challenging, if only because of the multiple inherent inaccuracies of the robot.
+The first iterations of this project will remain computer simulations, avoiding many technical difficulties. Indeed, implementing the code on a real-life Mindstorms robot is much more challenging, if only because of the multiple inherent inaccuracies of the robot. The plan is to use what we learnt from the simulation to program the Mindstorms NXT using [nxtOSEK](http://lejos-osek.sourceforge.net/), a C/C++ RTOS for the robot.
 
 Implementation
 --------------
@@ -17,7 +17,12 @@ Currently implemented are a simple maze generator to create varied test maps as 
 Version
 -------
 
-0.021
+0.022
+
+Dependencies
+------------
+
+[SDL](https://www.libsdl.org/): optional, the simulation also supports writing directly to stdout.
 
 Compilation
 -----------
@@ -25,6 +30,8 @@ Compilation
 `make DEBUG={0,1} SDL={0,1}`
 
 DEBUG=1 will generate a debug version with gprof profiling enabled. SDL=1 enables SDL support (SDL2 required).
+
+Use the `-B` flag when switching between SDL status to force make to recompile all objects.
 
 License
 -------

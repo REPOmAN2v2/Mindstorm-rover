@@ -23,6 +23,7 @@ Robot::Robot(Map &map)
 	} while (map.cells[y][x].obstacle == true);
 
 	map.cells[y][x].robot = true;
+	map.history.push(map.cells);
 }
 
 /**
@@ -64,8 +65,10 @@ void Robot::explore(Map &map)
 
 		if (iter == visited.end()) { // i.e. neighbour not yet visited
 			move(neighbours[i], map);
+			map.history.push(map.cells);
 			explore(map);
 			move(orig, map);
+			map.history.push(map.cells);
 		}
 	}
 }

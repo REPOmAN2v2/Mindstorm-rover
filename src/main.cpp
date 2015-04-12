@@ -25,7 +25,16 @@ int main(int, char **)
 		SDL::Keyboard keyboard;
 		Display display(window);
 
-		// show the full map once
+		size_t i = 0;
+		robot.explore(map);
+
+		while (i < map.history.size()) {
+			display.draw(map, map.history.front());
+			map.history.pop();
+			keyboard.waitFor(SDL_KEYDOWN);
+		}
+
+		/* show the full map once
 		display.drawDebug(map);
 		keyboard.waitFor(SDL_KEYDOWN);
 
@@ -35,7 +44,7 @@ int main(int, char **)
 
 		// explore and show the explored map
 		robot.explore(map);
-		display.draw(map);
+		display.draw(map);*/
 		keyboard.waitFor(SDL_QUIT);
 	} catch (...) {
 		SDL::exit();
@@ -46,9 +55,15 @@ int main(int, char **)
 
 	Display display;
 
-	display.drawDebug(map);
 	robot.explore(map);
-	display.draw(map);
+
+	size_t i = 0;
+
+	while (i < map.history.size()) {
+			display.draw(map, map.history.front());
+			map.history.pop();
+			std::cin.get();
+	}
 
 	std::cin.get();
 

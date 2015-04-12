@@ -14,8 +14,8 @@ void drawDebug(Map map, SDL::Window &window);*/
 
 class Display {
 public:
-	void draw(Map map);
-	void drawDebug(Map map);
+	void draw(Map map, std::vector< std::vector< Cell > > &cells);
+	void drawDebug(Map map, std::vector< std::vector< Cell > > &cells);
 
 #ifdef SDL_SUPPORT
 	Display(SDL::Window &window) : window(window) {};

@@ -3,11 +3,13 @@
 
 #include <vector>
 #include <utility>
+#include <queue>
 #include "cell.hpp"
 
 class Map {
 public:
 	std::vector< std::vector< Cell > > cells;
+	std::queue< std::vector< std::vector< Cell > > > history;
 	Map();
 	explicit Map(int);
 	explicit Map(int, int);

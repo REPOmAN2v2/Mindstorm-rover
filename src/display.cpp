@@ -5,7 +5,7 @@
 
 using namespace SDL;
 
-void Display::draw(Map map)
+void Display::draw(Map map, std::vector< std::vector< Cell > > &cells)
 {
 	Color red(255,0,0);
 	Color black(0,0,0);
@@ -16,16 +16,15 @@ void Display::draw(Map map)
 
 	for (size_t y = 0; y < map.height(); ++y) {
 		for (size_t x = 0; x < map.width(); ++x) {
-			Cell cell = map.getCell(y,x);
 			SDL_Rect rect = {.x=Cell::w*x, .y=Cell::h*y,
 						.w=Cell::w, .h=Cell::h};
 
-			if (cell.robot) {
+			if (cells[y][x].robot) {
 				window.drawRect(rect, red);
-			} else if (!cell.visible) {
+			} else if (!cells[y][x].visible) {
 				window.drawRect(rect, black);
 			} else {
-				if (!cell.obstacle) {
+				if (!cells[y][x].obstacle) {
 					window.drawRect(rect, white);
 				} else {
 					window.drawRect(rect, grey);
@@ -37,7 +36,7 @@ void Display::draw(Map map)
 	window.refresh();
 }
 
-void Display::drawDebug(Map map)
+void Display::drawDebug(Map map, std::vector< std::vector< Cell > > &cells)
 {
 	Color red(255,0,0);
 	Color white(255,255,255);
@@ -47,13 +46,12 @@ void Display::drawDebug(Map map)
 
 	for (size_t y = 0; y < map.height(); ++y) {
 		for (size_t x = 0; x < map.width(); ++x) {
-			Cell cell = map.getCell(y,x);
 			SDL_Rect rect = {.x=Cell::w*x, .y=Cell::h*y,
 						.w=Cell::w, .h=Cell::h};
 
-			if (cell.robot) {
+			if (cells[y][x].robot) {
 				window.drawRect(rect, red);
-			} else if (!cell.obstacle) {
+			} else if (!cells[y][x].obstacle) {
 				window.drawRect(rect, white);
 			} else {
 				window.drawRect(rect, grey);
@@ -66,18 +64,17 @@ void Display::drawDebug(Map map)
 
 #else
 
-void Display::draw(Map map)
+void Display::draw(Map map, std::vector< std::vector< Cell > > &cells)
 {
 	for (size_t y = 0; y < map.height(); ++y) {
 		for (size_t x = 0; x < map.width(); ++x) {
-			Cell cell = map.getCell(y,x);
 
-			if (cell.robot) {
+			if (cells[y][x].robot) {
 				std::cout << 'O';
-			} else if (!cell.visible) {
+			} else if (!cells[y][x].visible) {
 				std::cout << '?';
 			} else {
-				if (!cell.obstacle) {
+				if (!cells[y][x].obstacle) {
 					std::cout << '.';
 				} else {
 					std::cout << '#';
@@ -91,13 +88,12 @@ void Display::draw(Map map)
 	std::cout << std::endl;
 }
 
-void Display::drawDebug(Map map)
+void Display::drawDebug(Map map, std::vector< std::vector< Cell > > &cells)
 {
 	for (size_t y = 0; y < map.height(); ++y) {
 		for (size_t x = 0; x < map.width(); ++x) {
-			Cell cell = map.getCell(y,x);
 
-			if (!cell.obstacle) {
+			if (!cells[y][x].obstacle) {
 				std::cout << '.';
 			} else {
 				std::cout << '#';
