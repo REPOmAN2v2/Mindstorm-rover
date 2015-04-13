@@ -26,7 +26,8 @@ int main(int, char **)
 		Display display(window);
 
 		size_t i = 0;
-		robot.explore(map);
+		//robot.explore(map);
+		robot.goTo(map, std::make_pair(2, 10));
 
 		while (i < map.history.size()) {
 			display.draw(map, map.history.front());
@@ -34,18 +35,8 @@ int main(int, char **)
 			keyboard.waitFor(SDL_KEYDOWN);
 		}
 
-		/* show the full map once
-		display.drawDebug(map);
-		keyboard.waitFor(SDL_KEYDOWN);
-
-		// show the unexplored map
-		display.draw(map);
-		keyboard.waitFor(SDL_KEYDOWN);
-
-		// explore and show the explored map
-		robot.explore(map);
-		display.draw(map);*/
 		keyboard.waitFor(SDL_QUIT);
+
 	} catch (...) {
 		SDL::exit();
 		return -1;
@@ -60,9 +51,9 @@ int main(int, char **)
 	size_t i = 0;
 
 	while (i < map.history.size()) {
-			display.draw(map, map.history.front());
-			map.history.pop();
-			std::cin.get();
+		display.draw(map, map.history.front());
+		map.history.pop();
+		std::cin.get();
 	}
 
 	std::cin.get();

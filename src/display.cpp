@@ -11,6 +11,7 @@ void Display::draw(Map map, std::vector< std::vector< Cell > > &cells)
 	Color black(0,0,0);
 	Color white(255,255,255);
 	Color grey(130,130,130);
+	Color green(0,255,0);
 
 	window.clear();
 
@@ -21,6 +22,8 @@ void Display::draw(Map map, std::vector< std::vector< Cell > > &cells)
 
 			if (cells[y][x].robot) {
 				window.drawRect(rect, red);
+			} else if (cells[y][x].dest) {
+				window.drawRect(rect, green);
 			} else if (!cells[y][x].visible) {
 				window.drawRect(rect, black);
 			} else {
@@ -41,6 +44,7 @@ void Display::drawDebug(Map map, std::vector< std::vector< Cell > > &cells)
 	Color red(255,0,0);
 	Color white(255,255,255);
 	Color grey(130,130,130);
+	Color green(0,255,0);
 
 	window.clear();
 
@@ -51,6 +55,8 @@ void Display::drawDebug(Map map, std::vector< std::vector< Cell > > &cells)
 
 			if (cells[y][x].robot) {
 				window.drawRect(rect, red);
+			} else if (cells[y][x].dest) {
+				window.drawRect(rect, green);
 			} else if (!cells[y][x].obstacle) {
 				window.drawRect(rect, white);
 			} else {
@@ -71,6 +77,8 @@ void Display::draw(Map map, std::vector< std::vector< Cell > > &cells)
 
 			if (cells[y][x].robot) {
 				std::cout << 'O';
+			} else if (cells[y][x].dest) {
+				std::cout << 'X';
 			} else if (!cells[y][x].visible) {
 				std::cout << '?';
 			} else {

@@ -10,10 +10,15 @@ class Robot  {
 public:
 	explicit Robot(Map &map);
 	void explore(Map &map);
+	void goTo(Map &map, std::pair<int, int> dest);
+	void step(Map &map, std::pair<int, int> dest);
+	void astarFindNeighbours(Map &map, Cell cell);
+	//bool compareCells(const Cell *a, const Cell *b);
+	void checkNeighbour(Map map, Cell *cell, int prev);
 private:
 	int x, y;
 	Directions direction;
-	std::vector < std::pair < int, int> > visited;
+	std::vector < Cell* > open, visited, path;
 	void findNeighbours(std::vector < std::pair <int, int> > &neighbours) const;
 	void move(std::pair <int, int> coord, Map &map);
 };

@@ -42,7 +42,7 @@ Robot::Robot(Map &map)
  * the remaining (if any) neighbours, until every branch has been explored.
  */
 
-void Robot::explore(Map &map)
+/*void Robot::explore(Map &map)
 {
 	std::vector < std::pair <int, int> > neighbours;
 	std::pair <int,int> orig(y, x);
@@ -71,9 +71,101 @@ void Robot::explore(Map &map)
 			map.history.push(map.cells);
 		}
 	}
+}*/
+
+/**
+ * A* implementation
+ */
+
+ void Robot::goTo(Map &map, std::pair<int, int> dest)
+ {
+ 	//std::vector<Cell&> open, visited, path;
+ 	open.clear();
+ 	visited.clear();
+
+ 	map.cells[dest.first][dest.second].prev = 1;
+ 	map.cells[dest.first][dest.second].dest = true;
+
+ 	for (size_t j = 0; j < map.height(); ++j) {
+ 		for (size_t i = 0; i < map.width(); ++i) {
+ 			map.cells[j][i].setDistances(dest);
+ 		}
+ 	}
+
+ 	open.push_back(&map.cells[y][x]);
+ 	step(map, dest);
+ }
+
+ /**
+  * Pick best unvisited open node
+  */
+
+ void Robot::step(Map &map, std::pair<int, int> dest)
+ {
+ 	Cell *cell;
+ 	std::pair<int,int> orig(y,x);
+
+ 	do {
+ 		cell = open.back();
+ 		cell->visible = true;
+ 		open.pop_back();
+ 	} while (cell->invalid(visited, map.height(), map.width()));
+
+ 	move(std::make_pair(cell->y, cell->x), map);
+ 	map.history.push(map.cells);
+
+ 	if (cell->y == dest.first && cell->x == dest.second) {
+ 		return;
+ 	}
+
+ 	visited.push_back(cell);
+ 	astarFindNeighbours(map, *cell);
+ 	if (open.empty()) {
+ 		return;
+ 	}
+
+ 	step(map, dest);
 }
 
-/** Find our four immediate neighbours (ignoring diagonals).
+bool compareCells(const Cell *a, const Cell *b)
+{
+	if (a->prev + a->distEstimate == b->prev + b->distEstimate) {
+		return a->prev < b->prev;
+	}
+
+	return a->prev + a->distEstimate > b->prev + b->distEstimate;
+}
+
+void Robot::astarFindNeighbours(Map &map, Cell cell)
+{
+	if (map.validCoord(y, x-1))
+		checkNeighbour(map, &map.cells[cell.y][cell.x - 1], cell.prev);
+	if (map.validCoord(y+1, x))
+		checkNeighbour(map, &map.cells[cell.y + 1][cell.x], cell.prev);
+	if (map.validCoord(y, x+1))
+		checkNeighbour(map, &map.cells[cell.y][cell.x + 1], cell.prev);
+	if (map.validCoord(y-1, x))
+		checkNeighbour(map, &map.cells[cell.y - 1][cell.x], cell.prev);
+	std::sort(open.begin(), open.end(), compareCells);
+}
+
+void Robot::checkNeighbour(Map map, Cell *cell, int prev)
+{
+	cell->visible = true;
+	if (!cell->invalid(visited, map.height(), map.width())) {
+		for (size_t i = 0; i < open.size(); ++i) {
+			if (cell->y == open[i]->y && cell->x == open[i]->x) {
+				return;
+			}
+		}
+
+		cell->prev = prev + 1;
+		open.push_back(cell);
+	}
+}
+
+/**
+ * Find our four immediate neighbours (ignoring diagonals).
  *
  * Takes a reference to a vector of pairs of coordinates, which it then fills.
  * Returns void.
@@ -87,7 +179,8 @@ void Robot::findNeighbours(std::vector < std::pair <int, int> > &neighbours) con
 	neighbours.push_back(std::make_pair(y - 1, x));
 }
 
-/** Moves the robot
+/**
+ * Moves the robot
  *
  * Takes a pair of coordinates to move to and a reference to the map. returns
  * void.

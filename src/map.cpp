@@ -9,8 +9,8 @@ using namespace std;
 /**
  * Map constructor
  *
- * Initialises two public member variables, the number of horizontal (hCells)
- * and vertical (vCells) cells on the map with default values or values entered
+ * Initialises two public member variables, the number of horizontal (width)
+ * and vertical (height) cells on the map with default values or values entered
  * by the user.
  */
 
@@ -33,6 +33,13 @@ void Map::generateMaze()
 	cells.resize(vCells);
 	for (size_t y=0; y < vCells; ++y) {
 		cells[y].resize(hCells);
+	}
+
+	for (size_t y = 0; y < vCells; ++y) {
+		for (size_t x = 0; x < hCells; ++x) {
+			cells[y][x].y = y;
+			cells[y][x].x = x;
+		}
 	}
 
 	drillers.push_back(make_pair(hCells/2, vCells/2));
