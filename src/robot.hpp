@@ -2,25 +2,26 @@
 #define ROBOT_HPP_INCLUDED
 
 #include <vector>
+#include <array>
+#include <map>
 #include "map.hpp"
 
-enum Directions {WEST, NORTH, EAST, SOUTH};
+typedef std::pair<int,int> Coords;
+static const std::array<Coords, 4> dirs = {Coords{0, 1}, Coords{-1, 0},Coords{0, -1}, Coords{1, 0}};
+
 
 class Robot  {
 public:
 	explicit Robot(Map &map);
 	void explore(Map &map);
-	void goTo(Map &map, std::pair<int, int> dest);
-	void step(Map &map, std::pair<int, int> dest);
-	void astarFindNeighbours(Map &map, Cell cell);
-	//bool compareCells(const Cell *a, const Cell *b);
-	void checkNeighbour(Map map, Cell *cell, int prev);
+	void goTo(Map &map, Coords dest);
 private:
-	int x, y;
-	Directions direction;
-	std::vector < Cell* > open, visited, path;
-	void findNeighbours(std::vector < std::pair <int, int> > &neighbours) const;
-	void move(std::pair <int, int> coord, Map &map);
+	int _x, _y;
+	std::map<Coords, bool> visited;
+	std::vector<Coords > getNeighbours(Map &map, std::pair<int, int> current, std::map<Coords, bool> visited);
+	void move(Coords coord, Map &map);
+	float heuristic(Coords current, Coords goal);
+	void constructPath(Map &map, Coords start, Coords goal, std::map<Coords, Coords> came_from);
 };
 
 #endif

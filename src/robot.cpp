@@ -1,9 +1,8 @@
 #include "robot.hpp"
 #include <cstdlib>
-#include <ctime>
 #include <algorithm>
-#include <iostream>
-#include <stdexcept>
+#include <queue>
+#include <utility>
 
 /**
  * Robot Constructor.
@@ -18,11 +17,12 @@
 Robot::Robot(Map &map)
 {
 	do {
-		y = rand()%map.height();
-		x = rand()%map.width();
-	} while (map.cells[y][x].obstacle == true);
+		_y = rand()%map.height();
+		_x = rand()%map.width();
+	} while (map.cells[_y][_x].obstacle == true);
 
-	map.cells[y][x].robot = true;
+	map.cells[_y][_x].robot = true;
+	map.cells[_y][_x].visible = true;
 	map.history.push(map.cells);
 }
 
@@ -42,142 +42,116 @@ Robot::Robot(Map &map)
  * the remaining (if any) neighbours, until every branch has been explored.
  */
 
-/*void Robot::explore(Map &map)
+void Robot::explore(Map &map)
 {
-	std::vector < std::pair <int, int> > neighbours;
-	std::pair <int,int> orig(y, x);
+	Coords start(_y, _x);
+	visited[start] = true;
 
-	visited.push_back(std::make_pair(y, x));
-	findNeighbours(neighbours);
+	std::vector<Coords > neighbours = getNeighbours(map, start, visited);
 
-	for (size_t i = 0; i < 4; ++i) {
-		try {
-			map.cells.at(neighbours[i].first).at(neighbours[i].second).visible = true;
-		} catch (const std::out_of_range& e) {
-			continue; // neighbour is out of range, we can just move on
-		}
+	for (std::vector<Coords >::iterator neighbour = neighbours.begin(); neighbour != neighbours.end(); ++neighbour) {
 
-		if (map.cells[neighbours[i].first][neighbours[i].second].obstacle) {
-			continue;
-		}
-
-		std::vector<std::pair<int, int> >::iterator iter = std::find(visited.begin(), visited.end(), neighbours[i]);
-
-		if (iter == visited.end()) { // i.e. neighbour not yet visited
-			move(neighbours[i], map);
-			map.history.push(map.cells);
-			explore(map);
-			move(orig, map);
-			map.history.push(map.cells);
-		}
+		move(*neighbour, map);
+		map.history.push(map.cells);
+		explore(map);
+		move(start, map);
+		map.history.push(map.cells);
 	}
-}*/
+}
 
-/**
- * A* implementation
- */
+float Robot::heuristic(Coords current, Coords goal)
+{
+	int y1 = current.first;
+	int x1 = current.second;
+	int y2 = goal.first;
+	int x2 = goal.second;
+	float p = 1/2.50;
+	return (abs(x1 - x2) + abs(y1 - y2)) * (1.0 + p);
+}
+
+
+std::vector<Coords > Robot::getNeighbours(Map &map, std::pair<int, int> current, std::map<Coords, bool> visited)
+ {
+	int x, y, dx, dy;
+	y = current.first;
+	x = current.second;
+	std::vector<Coords > results;
+
+	for (int i = 0; i < 4; ++i) {
+		dy = dirs[i].first;
+		dx = dirs[i].second;
+
+		Coords next(y + dy, x + dx);
+		if (map.validCoord(next.first, next.second)) {
+			map.cells[next.first][next.second].visible = true;
+
+			if (!map.cells[next.first][next.second].obstacle && !visited[next]) {
+				results.push_back(next);
+			}
+		}
+    }
+
+    if ((x + y) % 2 == 0) {
+      // aesthetic improvement on square grids
+      std::reverse(results.begin(), results.end());
+    }
+
+    return results;
+ }
+
+void Robot::constructPath(Map &map, Coords start, Coords goal, std::map<Coords, Coords> came_from)
+{
+	Coords current = goal;
+	map.cells[current.first][current.second].dest = true;
+	while (current != start) {
+		current = came_from[current];
+		map.cells[current.first][current.second].dest = true;
+	}
+	map.history.push(map.cells);
+}
+
 
  void Robot::goTo(Map &map, std::pair<int, int> dest)
  {
- 	//std::vector<Cell&> open, visited, path;
- 	open.clear();
- 	visited.clear();
+ 	Coords start(_y, _x);
 
- 	map.cells[dest.first][dest.second].prev = 1;
- 	map.cells[dest.first][dest.second].dest = true;
+	std::priority_queue<std::pair<float,Coords>, std::vector<std::pair<float,Coords> >, std::greater<std::pair<float,Coords> > > open;
+	open.emplace(0, start);
 
- 	for (size_t j = 0; j < map.height(); ++j) {
- 		for (size_t i = 0; i < map.width(); ++i) {
- 			map.cells[j][i].setDistances(dest);
- 		}
- 	}
+	map.cells[dest.first][dest.second].dest = true;
 
- 	open.push_back(&map.cells[y][x]);
- 	step(map, dest);
- }
+	std::map<Coords, Coords > came_from;
+	std::map<Coords, float> cost;
+	visited.clear();
 
- /**
-  * Pick best unvisited open node
-  */
+	came_from[start] = start;
+	cost[start] = 0;
 
- void Robot::step(Map &map, std::pair<int, int> dest)
- {
- 	Cell *cell;
- 	std::pair<int,int> orig(y,x);
+	while (!open.empty()) {
+		Coords current =  open.top().second;
+		open.pop();
+		visited[current] = true;
 
- 	do {
- 		cell = open.back();
- 		cell->visible = true;
- 		open.pop_back();
- 	} while (cell->invalid(visited, map.height(), map.width()));
+		move(current, map);
+		std::vector<Coords > neighbours = getNeighbours(map, current, visited);
+		map.history.push(map.cells);
 
- 	move(std::make_pair(cell->y, cell->x), map);
- 	map.history.push(map.cells);
-
- 	if (cell->y == dest.first && cell->x == dest.second) {
- 		return;
- 	}
-
- 	visited.push_back(cell);
- 	astarFindNeighbours(map, *cell);
- 	if (open.empty()) {
- 		return;
- 	}
-
- 	step(map, dest);
-}
-
-bool compareCells(const Cell *a, const Cell *b)
-{
-	if (a->prev + a->distEstimate == b->prev + b->distEstimate) {
-		return a->prev < b->prev;
-	}
-
-	return a->prev + a->distEstimate > b->prev + b->distEstimate;
-}
-
-void Robot::astarFindNeighbours(Map &map, Cell cell)
-{
-	if (map.validCoord(y, x-1))
-		checkNeighbour(map, &map.cells[cell.y][cell.x - 1], cell.prev);
-	if (map.validCoord(y+1, x))
-		checkNeighbour(map, &map.cells[cell.y + 1][cell.x], cell.prev);
-	if (map.validCoord(y, x+1))
-		checkNeighbour(map, &map.cells[cell.y][cell.x + 1], cell.prev);
-	if (map.validCoord(y-1, x))
-		checkNeighbour(map, &map.cells[cell.y - 1][cell.x], cell.prev);
-	std::sort(open.begin(), open.end(), compareCells);
-}
-
-void Robot::checkNeighbour(Map map, Cell *cell, int prev)
-{
-	cell->visible = true;
-	if (!cell->invalid(visited, map.height(), map.width())) {
-		for (size_t i = 0; i < open.size(); ++i) {
-			if (cell->y == open[i]->y && cell->x == open[i]->x) {
-				return;
-			}
+		if (current == dest) {
+			constructPath(map, start, dest, came_from);
+			break;
 		}
 
-		cell->prev = prev + 1;
-		open.push_back(cell);
+		for (std::vector<Coords >::iterator neighbour = neighbours.begin(); neighbour != neighbours.end(); ++neighbour) {
+			float new_cost = ++cost[current];
+			if (!cost[*neighbour] || new_cost < cost[*neighbour]) {
+				cost[*neighbour] = new_cost;
+				float priority = new_cost + heuristic(*neighbour, dest);
+				open.emplace(priority, *neighbour);
+				came_from[*neighbour] = current;
+			}
+		}
 	}
-}
-
-/**
- * Find our four immediate neighbours (ignoring diagonals).
- *
- * Takes a reference to a vector of pairs of coordinates, which it then fills.
- * Returns void.
- */
-
-void Robot::findNeighbours(std::vector < std::pair <int, int> > &neighbours) const
-{
-	neighbours.push_back(std::make_pair(y, x - 1));
-	neighbours.push_back(std::make_pair(y + 1, x));
-	neighbours.push_back(std::make_pair(y, x + 1));
-	neighbours.push_back(std::make_pair(y - 1, x));
-}
+ }
 
 /**
  * Moves the robot
@@ -189,9 +163,9 @@ void Robot::findNeighbours(std::vector < std::pair <int, int> > &neighbours) con
  * internal coordinates.
  */
 
-void Robot::move(std::pair <int, int> coord, Map &map)
+void Robot::move(Coords coord, Map &map)
 {
-	map.updateRobotPos(std::make_pair(y,x), coord);
-	y = coord.first;
-	x = coord.second;
+	map.updateRobotPos(std::make_pair(_y,_x), coord);
+	_y = coord.first;
+	_x = coord.second;
 }

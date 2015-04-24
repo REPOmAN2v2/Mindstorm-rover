@@ -6,6 +6,8 @@ ODIR=./obj
 BDIR=./bin
 SRC=./src
 
+STD = -std=gnu++11
+
 DEBUG ?= 1
 ifeq ($(DEBUG), 1)
 	CXXFLAGS = -Wall -Wextra -g -pg
@@ -25,6 +27,8 @@ ifeq ($(SDL), 1)
 else
 	LIBS =
 endif
+
+CXXFLAGS += $(STD)
 
 _OBJECTS = $(_HEADERS:.hpp=.o)
 OBJECTS = $(patsubst %,$(ODIR)/%,$(_OBJECTS))

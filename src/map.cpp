@@ -134,3 +134,14 @@ Cell Map::getCell(size_t y, size_t x)
 
 	return cells[y][x];
 }
+
+std::pair<int,int> Map::getDest()
+{
+	int x, y;
+	do {
+		y = rand()%vCells;
+		x = rand()%hCells;
+	} while (cells[y][x].obstacle == true);
+
+	return make_pair(y,x);
+}

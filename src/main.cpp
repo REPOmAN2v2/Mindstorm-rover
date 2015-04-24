@@ -25,11 +25,10 @@ int main(int, char **)
 		SDL::Keyboard keyboard;
 		Display display(window);
 
-		size_t i = 0;
-		//robot.explore(map);
-		robot.goTo(map, std::make_pair(2, 10));
+		robot.explore(map);
+		//robot.goTo(map, map.getDest());
 
-		while (i < map.history.size()) {
+		while (!map.history.empty()) {
 			display.draw(map, map.history.front());
 			map.history.pop();
 			keyboard.waitFor(SDL_KEYDOWN);
@@ -48,9 +47,7 @@ int main(int, char **)
 
 	robot.explore(map);
 
-	size_t i = 0;
-
-	while (i < map.history.size()) {
+	while (!map.history.empty()) {
 		display.draw(map, map.history.front());
 		map.history.pop();
 		std::cin.get();
