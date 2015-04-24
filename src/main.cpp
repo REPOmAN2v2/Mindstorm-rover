@@ -25,8 +25,8 @@ int main(int, char **)
 		SDL::Keyboard keyboard;
 		Display display(window);
 
-		robot.explore(map);
-		//robot.goTo(map, map.getDest());
+		//robot.explore(map);
+		robot.goTo(map, map.getDest());
 
 		while (!map.history.empty()) {
 			display.draw(map, map.history.front());

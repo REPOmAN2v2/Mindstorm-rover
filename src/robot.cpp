@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <queue>
 #include <utility>
+#include <iostream>
 
 /**
  * Robot Constructor.
@@ -27,19 +28,21 @@ Robot::Robot(Map &map)
 }
 
 /**
- * Exploration routine.
+ * Recursive exploration routine.
  *
- * Takes a reference to the map as well as to the vector of visited cells.
+ * Takes a reference to the map as well as to the hash map of visited cells.
  * Returns void.
  *
  * This method uses a basic Depth-First Search. It adds the current position
- * to the visited vector then finds the four immediate neighbours. It then
- * looks at each neighbour one after the other, marking them as visible as it
- * goes. If the neighbour is an obstacle, it is skipped, else we check if it
- * has already been visited. If it hasn't, we move on the neighbour and call
- * this routine recursively with this new position.
+ * to the visited hash map then finds the four immediate neighbours. It then
+ * looks at each neighbour one after the other, moves on the neighbour and
+ * call this routine recursively with this new position.
  * When the routine returns, we move back to the original position and explore
  * the remaining (if any) neighbours, until every branch has been explored.
+ *
+ * We use a recursive algorithm here because it is more realistic: the robot
+ * retraces its path before exploring a new branch. Keeping an open list and
+ * eliminating the recursion would make it jump around between neighbours.
  */
 
 void Robot::explore(Map &map)
@@ -59,6 +62,18 @@ void Robot::explore(Map &map)
 	}
 }
 
+/**
+ * Provides heuristics for A*.
+ *
+ * Takes the coordinates of the current position and those of the goal.
+ * Returns the heuristic score as a float.
+ *
+ * The point of this function is to return the distance between the current
+ * position and the goal. This uses the Manhattan distance, which ignores
+ * diagonal movement. We also use a modifier, p, to overweight the heuristic
+ * compared to the distance traveled.
+ */
+
 float Robot::heuristic(Coords current, Coords goal)
 {
 	int y1 = current.first;
@@ -69,8 +84,19 @@ float Robot::heuristic(Coords current, Coords goal)
 	return (abs(x1 - x2) + abs(y1 - y2)) * (1.0 + p);
 }
 
+/**
+ * Finds the 4 neighbours around a cell.
+ *
+ * Takes a reference to the map, the current coordinates and the hash map of
+ * visited cells. Returns a vector containing the coordinates of our
+ * neighbours.
+ *
+ * This function checks the coordinates of the neighbours and if they have
+ * been visited before adding them to the returned vector. It also marks as
+ * visible each neighbour so we can draw them later.
+ */
 
-std::vector<Coords > Robot::getNeighbours(Map &map, std::pair<int, int> current, std::map<Coords, bool> visited)
+std::vector<Coords > Robot::getNeighbours(Map &map, Coords current, std::map<Coords, bool> visited)
  {
 	int x, y, dx, dy;
 	y = current.first;
@@ -99,6 +125,18 @@ std::vector<Coords > Robot::getNeighbours(Map &map, std::pair<int, int> current,
     return results;
  }
 
+ /**
+  * Reconstructs the shortest path after running A*.
+  *
+  * Takes a reference to the map, the starting and destination coordinates as
+  * well as the hash map containing our graph of visited cells.
+  *
+  * came_from is used to save the relationship between two cells. If we know
+  * coordinates of one cell, we can know which previous cell led us to it. So
+  * starting from the destination, we can trace back our path up to the start.
+  */
+
+
 void Robot::constructPath(Map &map, Coords start, Coords goal, std::map<Coords, Coords> came_from)
 {
 	Coords current = goal;
@@ -110,8 +148,19 @@ void Robot::constructPath(Map &map, Coords start, Coords goal, std::map<Coords, 
 	map.history.push(map.cells);
 }
 
+/**
+ * A* algorithm.
+ *
+ * Takes a reference to the map and the destination's coordinates.
+ *
+ * http://www.redblobgames.com/pathfinding/a-star/introduction.html
+ * Note that we use a pair containing an int and a pair of coordinates in the
+ * priority queue so we can order those coordinates according to their
+ * priority. This priority is calculated by adding the number of cells we
+ * explored so far (cost) with the heuristic.
+ */
 
- void Robot::goTo(Map &map, std::pair<int, int> dest)
+void Robot::goTo(Map &map, Coords dest)
  {
  	Coords start(_y, _x);
 
