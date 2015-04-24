@@ -15,7 +15,7 @@ public:
 	explicit Map(int, int);
 	Cell getCell(size_t y, size_t x);
 	void updateRobotPos(std::pair<int,int> oldPos, std::pair<int,int> newPos);
-	bool validCoord(int y, int x) {return (y >= 0 && x >= 0 && y < vCells && x < hCells);};
+	bool validCoord(int y, int x) {return !(y < 0 || x < 0 || y >= vCells || x >= hCells);};
 	std::pair<int,int> getDest();
 	size_t height() {return vCells;};
 	size_t width() {return hCells;};

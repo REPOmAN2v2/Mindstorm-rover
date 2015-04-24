@@ -35,13 +35,6 @@ void Map::generateMaze()
 		cells[y].resize(hCells);
 	}
 
-	for (size_t y = 0; y < vCells; ++y) {
-		for (size_t x = 0; x < hCells; ++x) {
-			cells[y][x].y = y;
-			cells[y][x].x = x;
-		}
-	}
-
 	drillers.push_back(make_pair(hCells/2, vCells/2));
 
 	while (drillers.size() > 0) {
