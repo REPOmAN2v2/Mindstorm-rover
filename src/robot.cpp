@@ -66,7 +66,7 @@ void Robot::explore(Map &map)
  * Provides heuristics for A*.
  *
  * Takes the coordinates of the current position and those of the goal.
- * Returns the heuristic score as a float.
+ * Returns the heuristic score as an int.
  *
  * The point of this function is to return the distance between the current
  * position and the goal. This uses the Manhattan distance, which ignores
@@ -74,14 +74,14 @@ void Robot::explore(Map &map)
  * compared to the distance traveled.
  */
 
-float Robot::heuristic(Coords current, Coords goal)
+int Robot::heuristic(Coords current, Coords goal)
 {
 	int y1 = current.first;
 	int x1 = current.second;
 	int y2 = goal.first;
 	int x2 = goal.second;
-	float p = 1/2.50;
-	return (abs(x1 - x2) + abs(y1 - y2)) * (1.0 + p);
+	int p = 10;
+	return (abs(x1 - x2) + abs(y1 - y2)) * p;
 }
 
 /**
@@ -164,13 +164,13 @@ void Robot::goTo(Map &map, Coords dest)
  {
  	Coords start(_y, _x);
 
-	std::priority_queue<std::pair<float,Coords>, std::vector<std::pair<float,Coords> >, std::greater<std::pair<float,Coords> > > open;
+	std::priority_queue<std::pair<int,Coords>, std::vector<std::pair<int,Coords> >, std::greater<std::pair<int,Coords> > > open;
 	open.emplace(0, start);
 
 	map.cells[dest.first][dest.second].dest = true;
 
 	std::map<Coords, Coords > came_from;
-	std::map<Coords, float> cost;
+	std::map<Coords, int> cost;
 	visited.clear();
 
 	came_from[start] = start;
@@ -191,10 +191,10 @@ void Robot::goTo(Map &map, Coords dest)
 		}
 
 		for (std::vector<Coords >::iterator neighbour = neighbours.begin(); neighbour != neighbours.end(); ++neighbour) {
-			float new_cost = ++cost[current];
+			int new_cost = ++cost[current];
 			if (!cost[*neighbour] || new_cost < cost[*neighbour]) {
 				cost[*neighbour] = new_cost;
-				float priority = new_cost + heuristic(*neighbour, dest);
+				int priority = new_cost + heuristic(*neighbour, dest);
 				open.emplace(priority, *neighbour);
 				came_from[*neighbour] = current;
 			}

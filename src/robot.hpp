@@ -20,7 +20,7 @@ private:
 	std::map<Coords, bool> visited;
 	std::vector<Coords > getNeighbours(Map &map, std::pair<int, int> current, std::map<Coords, bool> visited);
 	void move(Coords coord, Map &map);
-	float heuristic(Coords current, Coords goal);
+	int heuristic(Coords current, Coords goal);
 	void constructPath(Map &map, Coords start, Coords goal, std::map<Coords, Coords> came_from);
 };
 
