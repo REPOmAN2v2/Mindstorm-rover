@@ -8,16 +8,16 @@ The first iterations of this project will remain computer simulations, avoiding 
 Implementation
 --------------
 
-This project makes use of C++ classes and some very useful standard library data structures. It should remain compatible with the C++98 standard.
+This project makes use of C++ classes and some very useful standard library data structures.
 
 The simulator supports ASCII graphics in a standard console as well as SDL2 2D graphics. 
 
-Currently implemented are a simple maze generator to create varied test maps as well as a basic Depth-First Search (DFS) to explore the map. This is still very much a WIP, so there is more to come...
+Currently implemented are a simple maze generator to create varied test maps as well as a basic Depth-First Search (DFS) to explore the map. The A* pathfinding algorithm is implemented to find the fastest path between two points. This is still very much a WIP, so there is more to come...
 
 Version
 -------
 
-0.022
+0.024
 
 Dependencies
 ------------
