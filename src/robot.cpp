@@ -27,6 +27,12 @@ Robot::Robot(Map &map)
 	map.history.push(map.cells);
 }
 
+void Robot::explore(Map &map)
+{
+	std::map<Coords, bool> visited;	
+	DFS(map, visited);
+}
+
 /**
  * Recursive exploration routine.
  *
@@ -45,7 +51,7 @@ Robot::Robot(Map &map)
  * eliminating the recursion would make it jump around between neighbours.
  */
 
-void Robot::explore(Map &map)
+void Robot::DFS(Map &map, std::map<Coords, bool> &visited)
 {
 	Coords start(_y, _x);
 	visited[start] = true;
@@ -56,7 +62,7 @@ void Robot::explore(Map &map)
 
 		move(*neighbour, map);
 		map.history.push(map.cells);
-		explore(map);
+		DFS(map, visited);
 		move(start, map);
 		map.history.push(map.cells);
 	}
@@ -171,7 +177,7 @@ void Robot::goTo(Map &map, Coords dest)
 
 	std::map<Coords, Coords > came_from;
 	std::map<Coords, int> cost;
-	visited.clear();
+	std::map<Coords, bool> visited;
 
 	came_from[start] = start;
 	cost[start] = 0;

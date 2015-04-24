@@ -17,8 +17,9 @@ public:
 	void goTo(Map &map, Coords dest);
 private:
 	int _x, _y;
-	std::map<Coords, bool> visited;
+//	std::map<Coords, bool> visited;
 	std::vector<Coords > getNeighbours(Map &map, std::pair<int, int> current, std::map<Coords, bool> visited);
+	void DFS(Map &map, std::map<Coords, bool> &visited);
 	void move(Coords coord, Map &map);
 	int heuristic(Coords current, Coords goal);
 	void constructPath(Map &map, Coords start, Coords goal, std::map<Coords, Coords> came_from);
