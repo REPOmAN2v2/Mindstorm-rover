@@ -29,7 +29,7 @@ Robot::Robot(Map &map)
 
 void Robot::explore(Map &map)
 {
-	std::map<Coords, bool> visited;	
+	std::map<Coords, bool> visited;
 	DFS(map, visited);
 }
 
@@ -163,7 +163,7 @@ void Robot::constructPath(Map &map, Coords start, Coords goal, std::map<Coords, 
  * Note that we use a pair containing an int and a pair of coordinates in the
  * priority queue so we can order those coordinates according to their
  * priority. This priority is calculated by adding the number of cells we
- * explored so far (cost) with the heuristic.
+ * explored so far (cost) to the heuristic.
  */
 
 void Robot::goTo(Map &map, Coords dest)
@@ -211,7 +211,7 @@ void Robot::goTo(Map &map, Coords dest)
 /**
  * Moves the robot
  *
- * Takes a pair of coordinates to move to and a reference to the map. returns
+ * Takes a pair of coordinates to move to and a reference to the map. Returns
  * void.
  *
  * This updates the robot's positon on the map then updates the robot's

@@ -7,11 +7,6 @@
 #include "sdl.hpp"
 #endif
 
-/*void draw(Map map, SDL::Window &window);
-void drawDebug(Map map, SDL::Window &window);*/
-
-
-
 class Display {
 public:
 	void draw(Map map, std::vector< std::vector< Cell > > &cells);

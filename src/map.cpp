@@ -23,6 +23,9 @@ Map::Map(int h, int v) : hCells(h), vCells(v) {generateMaze();}
  *
  * It generates a random simple maze. Good enough for quick testing with
  * unique maps every time.
+ *
+ * From http://www.roguebasin.com/index.php?title=Simple_maze by Jakub Debski
+ * '2006 (Public Domain).
  */
 
 void Map::generateMaze()
@@ -127,6 +130,10 @@ Cell Map::getCell(size_t y, size_t x)
 
 	return cells[y][x];
 }
+
+/**
+ * Returns a random pair of valid coordinates.
+ */
 
 std::pair<int,int> Map::getDest()
 {

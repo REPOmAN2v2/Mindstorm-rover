@@ -5,6 +5,15 @@
 
 using namespace SDL;
 
+/**
+ * Draws the map using SDL.
+ *
+ * Takes a map object and a reference to the 2D vector of cells inside the
+ * map (could be improved). Returns void.
+ *
+ * This simply iterates over the vector of cells and, depending on the type
+ * of the cell, draws a rectangle of a certain colour.
+ */
 void Display::draw(Map map, std::vector< std::vector< Cell > > &cells)
 {
 	Color red(255,0,0);
@@ -70,6 +79,15 @@ void Display::drawDebug(Map map, std::vector< std::vector< Cell > > &cells)
 
 #else
 
+/**
+ * Draws the map to the terminal.
+ *
+ * Takes a map object and a reference to the 2D vector of cells inside the
+ * map (could be improved). Returns void.
+ *
+ * This simply iterates over the vector of cells and, depending on the type
+ * of the cell, prints a specific character.
+ */
 void Display::draw(Map map, std::vector< std::vector< Cell > > &cells)
 {
 	for (size_t y = 0; y < map.height(); ++y) {

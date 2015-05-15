@@ -12,7 +12,7 @@ DEBUG ?= 1
 ifeq ($(DEBUG), 1)
 	CXXFLAGS = -Wall -Wextra -g -pg
 else
-	CXXFLAGS = -O2 -march=native
+	CXXFLAGS = -O2 -march=native -static
 endif
 
 SDL ?= 1
@@ -20,7 +20,7 @@ ifeq ($(SDL), 1)
 	_HEADERS += sdl.hpp
 	CXXFLAGS += -DSDL_SUPPORT
 	ifdef COMSPEC
-		LIBS = -lmingw32 -lSDL2main -lSDL2 -luser32 -lgdi32 -ldxguid
+		LIBS = -lmingw32 -lSDL2main -lSDL2 -mwindows -lm -ldinput8 -ldxguid -ldxerr8 -luser32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lversion -luuid
 	else
 		LIBS = `sdl2-config --cflags --libs`
 	endif

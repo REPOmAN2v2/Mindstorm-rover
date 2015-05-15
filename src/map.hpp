@@ -8,7 +8,10 @@
 
 class Map {
 public:
+	// The map is composed of a 2D vector of cells
 	std::vector< std::vector< Cell > > cells;
+	// Queue of map states (a new state is created everytime something changes
+	// on the map)
 	std::queue< std::vector< std::vector< Cell > > > history;
 	Map();
 	explicit Map(int);
@@ -20,6 +23,7 @@ public:
 	size_t height() {return vCells;};
 	size_t width() {return hCells;};
 private:
+	// height and width of the map
 	size_t hCells, vCells;
 	void generateMaze();
 };
